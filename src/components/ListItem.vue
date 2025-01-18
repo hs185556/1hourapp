@@ -11,7 +11,7 @@
       type="text"
       v-model="modelData.content"
       class="flex-1"
-      @change="emits('save', modelData)"
+      @input="delay(() => emits('save', modelData))"
     />
     <el-icon
       class="warning-color f18"
@@ -40,10 +40,10 @@ const modelData = computed({
   },
 });
 
+let timer;
 function delay(fn) {
-  let timer;
   clearTimeout(timer);
-  timer = setTimeout(fn, 300);
+  timer = setTimeout(fn, 500);
 }
 </script>
 

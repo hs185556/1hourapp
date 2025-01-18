@@ -62,6 +62,7 @@ function initSortable() {
       group: { name: "itxst.com", pull: true, put: true },
       handle: ".move",
       animation: 150,
+      delay: 200,
       ghostClass: "sortable-ghost",
       chosenClass: "sortable-chosen",
       dragClass: "sortable-drag",
@@ -127,10 +128,15 @@ async function handleUpdate(data) {
 }
 
 async function handleDelData(source, index) {
-  const pop = listData[source].data.splice(index, 1);
-  deleteTodo(pop[0].id);
-  sortData();
-  await saveData();
+  ElMessageBox.confirm("确认删除该项?", "警告", {
+    type: "warning",
+  }).then(() => {
+    const [item] = listData[source].data.splice(index, 1);
+    deleteTodo(item.id);
+    sortData();
+    saveData();
+    ElMessage.success("删除成功");
+  });
 }
 
 function saveData() {
@@ -160,12 +166,12 @@ async function exportData() {
   try {
     const allData = await getAllTodos();
     const blob = new Blob([JSON.stringify(allData)], {
-      type: "application/json",
+      type: "text/plain", // 更改为纯文本类型
     });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `1hourapp_data_${dayjs().format("YYYY-MM-DD")}.json`;
+    link.download = `1hourapp_data_${dayjs().format("YYYY-MM-DD")}.xml`; // 更改为 .xml 扩展名
     link.click();
     URL.revokeObjectURL(url);
     ElMessage.success("导出成功");
@@ -180,14 +186,14 @@ async function importData() {
   try {
     const input = document.createElement("input");
     input.type = "file";
-    input.accept = "application/json";
+    input.accept = ".xml"; // 仅接受 .xml 文件
     input.onchange = async function (event) {
       const file = event.target.files[0];
       const reader = new FileReader();
       reader.onload = async function (event) {
         try {
           await clearTodos();
-          const data = JSON.parse(event.target.result);
+          const data = JSON.parse(event.target.result); // 解析纯文本 JSON 内容
           await batchAddOrUpdateTodos(data);
           await getData();
           ElMessage.success("导入成功");
@@ -197,7 +203,7 @@ async function importData() {
           await batchAddOrUpdateTodos(dataBak);
         }
       };
-      reader.readAsText(file);
+      reader.readAsText(file); // 读取文件为纯文本
     };
     input.click();
   } catch (error) {
@@ -215,6 +221,7 @@ async function importData() {
   padding: 8px 8px 0 8px;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
   overflow-y: auto;
 }
 .searchWrap {

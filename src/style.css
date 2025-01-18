@@ -14,6 +14,9 @@
   html,
   body {
     margin: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
   }
 
   h1,
@@ -84,6 +87,30 @@
   /* === */
   .el-button--primary {
     --el-button-hover-link-text-color: var(--el-color-primary);
+  }
+
+  .el-popper,
+  .el-picker-panel,
+  .el-date-picker__header,
+  .el-picker-panel__body-wrapper,
+  .el-picker-panel__body,
+  .el-picker-panel__content {
+    max-width: 90vw !important;
+  }
+  .el-date-picker__header {
+    padding: 2px 2px 0;
+  }
+  .el-date-picker .el-picker-panel__content {
+    margin: 5px;
+  }
+  .el-date-table {
+    max-width: 90vw !important;
+  }
+  .el-date-table th {
+    padding: 0;
+  }
+  .el-date-table td {
+    padding: 0;
   }
 }
 /* :root {

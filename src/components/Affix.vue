@@ -21,8 +21,8 @@
     >
       VConsole
     </el-button>
-    <el-button type="primary" link @click="emit('export')">导出</el-button>
     <el-button type="primary" link @click="emit('import')">导入</el-button>
+    <el-button type="primary" link @click="emit('export')">导出</el-button>
     <el-button type="primary" link @click="emit('moveToPool')">进池</el-button>
   </el-popover>
 </template>
@@ -39,13 +39,21 @@ const buttonRef = ref(null);
 const popoverRef = ref(null);
 
 let vConsoleInstance = ref(null);
+
 function toggleVConsole() {
   if (!vConsoleInstance.value) {
     vConsoleInstance.value = new VConsole();
+    localStorage.setItem('vConsoleEnabled', 'true');
   } else {
     vConsoleInstance.value.destroy();
     vConsoleInstance.value = null;
+    localStorage.removeItem('vConsoleEnabled');
   }
+}
+
+// 初始化时检查本地存储并恢复状态
+if (localStorage.getItem('vConsoleEnabled') === 'true') {
+  vConsoleInstance.value = new VConsole();
 }
 </script>
 
