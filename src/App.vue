@@ -1,5 +1,20 @@
 <template>
-  <el-button type="primary">我是 ElButton</el-button>
+  <div class="app">
+    <Header></Header>
+    <Main></Main>
+  </div>
 </template>
 
-<script setup></script>
+<script setup>
+import Header from "./components/Header.vue";
+import Main from "./components/Main.vue";
+</script>
+
+<style scoped>
+.app {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+</style>

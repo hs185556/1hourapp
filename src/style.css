@@ -1,3 +1,91 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  header {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    margin: 0;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p {
+    margin: 0;
+  }
+
+  .f16 {
+    font-size: 16px;
+  }
+  .f18 {
+    font-size: 18px;
+  }
+  .f20 {
+    font-size: 20px;
+  }
+  .w100 {
+    width: 100%;
+  }
+  .g8 {
+    gap: 8px;
+  }
+  .pr16 {
+    padding-right: 16px;
+  }
+  .mt8 {
+    margin-top: 8px;
+  }
+  .mb8 {
+    margin-bottom: 8px;
+  }
+  .mb16 {
+    margin-bottom: 16px;
+  }
+  .mr8 {
+    margin-right: 8px;
+  }
+  .mr16 {
+    margin-right: 16px;
+  }
+  .ml12 {
+    margin-left: 12px;
+  }
+  .ml16 {
+    margin-left: 16px;
+  }
+  .primary-color {
+    color: blue;
+  }
+  .warning-color {
+    color: red;
+  }
+  .card {
+    border-radius: 3px;
+    background: #fff;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.15);
+    padding: 8px;
+  }
+  .card + .card {
+    margin-top: 8px;
+  }
+
+  /* === */
+  .el-button--primary {
+    --el-button-hover-link-text-color: var(--el-color-primary);
+  }
+}
 /* :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
