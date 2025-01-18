@@ -111,7 +111,7 @@ function sortData() {
 function getNewData(source) {
   return {
     content: "",
-    date: dayjs().format("YYYY-MM-DD"),
+    date: searchForm.date1,
     source,
   };
 }
