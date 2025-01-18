@@ -93,6 +93,7 @@ function initSortable() {
         listData[oldSource].data.splice(oldIndex, 1);
         listData[newSource].data.splice(newIndex, 0, template);
         sortData();
+        listData[0].data.forEach((item) => (item.date = searchForm.date1));
         await saveData();
       },
     });
