@@ -30,6 +30,7 @@ import {
   addTodo,
   updateTodo,
   deleteTodo,
+  batchDeleteTodos,
   clearTodos,
   batchAddOrUpdateTodos,
 } from "@/controller/todoController";
@@ -146,21 +147,23 @@ function saveData() {
 }
 
 async function moveToPoolData() {
-  const moveData = listData[0].data
-    .filter((v) => !v.isDone)
-    .map((v) => {
-      delete v.id;
-      return v;
-    });
-  listData[1].data.unshift(...moveData);
-  sortData();
-  await batchAddOrUpdateTodos(
-    listData[1].data.map((v) => ({ ...v, source: 1 }))
-  );
-  ElMessage({
-    message: "已成功将未完成事项移动到待办事项",
-    type: "success",
+  // 删除未完成事项
+  const unDoneData = listData[0].data.filter((v) => !v.isDone);
+  listData[0].data = listData[0].data.filter((v) => v.isDone);
+  await batchDeleteTodos(unDoneData.map((v) => v.id));
+
+  // 添加进任务池
+  const moveData = unDoneData.map((v) => {
+    delete v.id;
+    return v;
   });
+  listData[1].data.unshift(...moveData);
+  listData[1].data = listData[1].data.map((v) => ({ ...v, source: 1 }));
+
+  // 排序保存
+  sortData();
+  await saveData();
+  ElMessage.success("已成功将未完成事项移动到待办事项");
 }
 
 async function exportData() {

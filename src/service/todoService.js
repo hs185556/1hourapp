@@ -79,6 +79,14 @@ class TodoService {
     }
   }
 
+  async batchDeleteTodos(ids) {
+    try {
+      await Promise.all(ids.map((id) => this.indexDB.delete(STORE_NAME, id)));
+    } catch (error) {
+      console.error("Failed to batch delete todos:", error);
+    }
+  }
+
   async clearTodos() {
     try {
       await this.indexDB.clear(STORE_NAME);

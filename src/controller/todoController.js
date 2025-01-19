@@ -40,6 +40,10 @@ export const deleteTodo = async function () {
   return await todoService.deleteTodo(...arguments);
 };
 
+export const batchDeleteTodos = async function () {
+  return await todoService.batchDeleteTodos(...arguments);
+};
+
 export const clearTodos = async function () {
   return await todoService.clearTodos(...arguments);
 };
