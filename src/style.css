@@ -7,6 +7,15 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
+  -webkit-tap-highlight-color: rgba(
+    0,
+    0,
+    0,
+    0
+  ); /*CSS3去除手机浏览器按钮点击出现的高亮框*/
+  -webkit-tap-highlight-color: transparent;
+  -moz-tap-highlight-color: transparent;
+
   header {
     box-sizing: border-box;
   }
@@ -84,6 +93,10 @@
   /* === */
   .el-button--primary {
     --el-button-hover-link-text-color: var(--el-color-primary);
+  }
+
+  .el-popover.el-popper {
+    min-width: 0;
   }
 
   .el-popper,

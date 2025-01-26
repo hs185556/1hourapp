@@ -8,8 +8,10 @@
       @delData="handleDelData"
     />
     <Affix
-      @export="exportData"
-      @import="importData"
+      @export="handleExport"
+      @import="handleImport"
+      @export2="handleExport2"
+      @import2="handleImport2"
       @moveToPool="moveToPoolData"
     ></Affix>
   </main>
@@ -48,6 +50,7 @@ const listData = reactive([
 onMounted(async () => {
   await Promise.all([openTodo(), initSortable()]);
   await getData();
+  console.log(">>>navigator.userAgent", navigator.userAgent);
 });
 
 async function getData() {
@@ -63,7 +66,7 @@ function initSortable() {
       group: { name: "itxst.com", pull: true, put: true },
       handle: ".move",
       animation: 150,
-      delay: 200,
+      // delay: 200,
       ghostClass: "sortable-ghost",
       chosenClass: "sortable-chosen",
       dragClass: "sortable-drag",
@@ -166,7 +169,7 @@ async function moveToPoolData() {
   ElMessage.success("已成功将未完成事项移动到待办事项");
 }
 
-async function exportData() {
+async function handleExport() {
   try {
     const allData = await getAllTodos();
     const blob = new Blob([JSON.stringify(allData)], {
@@ -184,20 +187,20 @@ async function exportData() {
   }
 }
 
-async function importData() {
+async function handleImport() {
   const dataBak = await getAllTodos();
 
   try {
     const input = document.createElement("input");
     input.type = "file";
-    input.accept = ".xml"; // 仅接受 .xml 文件
+    // input.accept = ".xml"; // 仅接受 .xml 文件
     input.onchange = async function (event) {
       const file = event.target.files[0];
       const reader = new FileReader();
       reader.onload = async function (event) {
         try {
-          await clearTodos();
           const data = JSON.parse(event.target.result); // 解析纯文本 JSON 内容
+          await clearTodos();
           await batchAddOrUpdateTodos(data);
           await getData();
           ElMessage.success("导入成功");
@@ -210,6 +213,57 @@ async function importData() {
       reader.readAsText(file); // 读取文件为纯文本
     };
     input.click();
+  } catch (error) {
+    console.error(error);
+    ElMessage.error("导入失败，恢复备份数据");
+    await batchAddOrUpdateTodos(dataBak);
+  }
+}
+
+async function handleExport2() {
+  const data = await getAllTodos();
+  const jsonString = JSON.stringify(data);
+
+  const { value } = await ElMessageBox.prompt("导出数据", {
+    confirmButtonText: "复制",
+    cancelButtonText: "取消",
+    inputType: "textarea",
+    inputValue: jsonString,
+  });
+
+  // 创建一个隐藏的 textarea 元素
+  const textarea = document.createElement("textarea");
+  textarea.id = "hiddenTextarea";
+  textarea.style.position = "absolute";
+  textarea.style.left = "-9999px";
+  document.body.appendChild(textarea);
+
+  // 将文本内容写入 textarea
+  textarea.value = value;
+
+  // 选择 textarea 中的文本
+  textarea.select();
+  textarea.setSelectionRange(0, textarea.value.length);
+
+  document.execCommand("copy");
+  ElMessage.success("数据已复制到剪贴板");
+}
+
+async function handleImport2() {
+  const { value: jsonString } = await ElMessageBox.prompt("导入数据", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    inputType: "textarea",
+  });
+
+  if (!jsonString) return;
+
+  try {
+    const data = JSON.parse(jsonString);
+    await clearTodos();
+    await batchAddOrUpdateTodos(data);
+    await getData();
+    ElMessage.success("导入成功");
   } catch (error) {
     console.error(error);
     ElMessage.error("导入失败，恢复备份数据");

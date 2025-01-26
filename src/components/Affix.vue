@@ -12,7 +12,7 @@
     trigger="click"
     title=""
     placement="bottom-end"
-    width="235"
+    width="100"
   >
     <el-button
       :type="vConsoleInstance ? 'primary' : 'info'"
@@ -21,9 +21,26 @@
     >
       VConsole
     </el-button>
-    <el-button type="primary" link @click="emit('import')">导入</el-button>
-    <el-button type="primary" link @click="emit('export')">导出</el-button>
-    <el-button type="primary" link @click="emit('moveToPool')">进池</el-button>
+    <br />
+    <el-button type="primary" link @click="emit('import')">
+      文件导入
+    </el-button>
+    <br />
+    <el-button type="primary" link @click="emit('export')">
+      文件导出
+    </el-button>
+    <br />
+    <el-button type="primary" link @click="emit('import2')">
+      文本导入
+    </el-button>
+    <br />
+    <el-button type="primary" link @click="emit('export2')">
+      文本导出
+    </el-button>
+    <br />
+    <el-button type="primary" link @click="emit('moveToPool')">
+      进池
+    </el-button>
   </el-popover>
 </template>
 
@@ -33,7 +50,13 @@ import { ref } from "vue";
 import { ClickOutside as vClickOutside } from "element-plus";
 import { Menu } from "@element-plus/icons-vue";
 
-const emit = defineEmits(["export", "import", "moveToPool"]);
+const emit = defineEmits([
+  "export",
+  "import",
+  "moveToPool",
+  "import2",
+  "export2",
+]);
 
 const buttonRef = ref(null);
 const popoverRef = ref(null);
@@ -43,16 +66,16 @@ let vConsoleInstance = ref(null);
 function toggleVConsole() {
   if (!vConsoleInstance.value) {
     vConsoleInstance.value = new VConsole();
-    localStorage.setItem('vConsoleEnabled', 'true');
+    localStorage.setItem("vConsoleEnabled", "true");
   } else {
     vConsoleInstance.value.destroy();
     vConsoleInstance.value = null;
-    localStorage.removeItem('vConsoleEnabled');
+    localStorage.removeItem("vConsoleEnabled");
   }
 }
 
 // 初始化时检查本地存储并恢复状态
-if (localStorage.getItem('vConsoleEnabled') === 'true') {
+if (localStorage.getItem("vConsoleEnabled") === "true") {
   vConsoleInstance.value = new VConsole();
 }
 </script>
