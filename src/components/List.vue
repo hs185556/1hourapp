@@ -1,6 +1,10 @@
 <template>
   <div class="listWrap card">
-    <el-collapse v-model="activeName" @change="setLocalActive" class="collapseWrap">
+    <el-collapse
+      v-model="activeName"
+      @change="setLocalActive"
+      class="collapseWrap"
+    >
       <el-collapse-item
         v-for="item in listData"
         :key="item.id"
@@ -11,7 +15,10 @@
           <div
             class="flex flex-row flex-justify-between flex-items-center w100 pr16"
           >
-            {{ item.title }}
+            {{
+              item.title +
+              (item.data.length ? "（" + item.data.length + "）" : "")
+            }}
             <el-icon
               class="primary-color f18"
               @click.stop.prevent="handleAddData(item.source)"
@@ -50,11 +57,11 @@ const props = defineProps({
 
 const emit = defineEmits(["addData", "updateData", "delData"]);
 
-const activeName = ref(JSON.parse(localStorage.getItem('activeName')) || [0]);
+const activeName = ref(JSON.parse(localStorage.getItem("activeName")) || [0]);
 
 const setLocalActive = (name) => {
-  localStorage.setItem('activeName', JSON.stringify(name))
-}
+  localStorage.setItem("activeName", JSON.stringify(name));
+};
 
 const handleAddData = (source) => {
   emit("addData", toRaw(source));
