@@ -12,7 +12,9 @@
       @import="handleImport"
       @export2="handleExport2"
       @import2="handleImport2"
+      @export3="handleExport2(searchForm.date1)"
       @moveToPool="moveToPoolData"
+      @moveToPool2="moveToPoolData2"
     ></Affix>
   </main>
 </template>
@@ -29,6 +31,7 @@ import {
   openTodo,
   getTodos,
   getAllTodos,
+  getTodosByDate,
   addTodo,
   updateTodo,
   deleteTodo,
@@ -149,6 +152,7 @@ function saveData() {
   batchAddOrUpdateTodos(toRaw(listData.map((v) => toRaw(v.data)).flat()));
 }
 
+// 进池
 async function moveToPoolData() {
   // 删除未完成事项
   const unDoneData = listData[0].data.filter((v) => !v.isDone);
@@ -167,6 +171,34 @@ async function moveToPoolData() {
   sortData();
   await saveData();
   ElMessage.success("已成功将未完成事项移动到待办事项");
+}
+
+// 进第二天 TODO
+async function moveToPoolData2() {
+  // 删除未完成事项
+  const unDoneData = listData[0].data.filter((v) => !v.isDone);
+  listData[0].data = listData[0].data.filter((v) => v.isDone);
+  await batchDeleteTodos(unDoneData.map((v) => v.id));
+  // 添加进第二天的数据
+  const moveData = unDoneData.map((v) => {
+    delete v.id;
+    return v;
+  });
+  // 查询第二天的数据
+  const secondDayData = await getTodosByDate(
+    dayjs(searchForm.date1).add(1, "day").format("YYYY-MM-DD"),
+    (v) => v.source == 0
+  );
+  // 合并第二天的数据
+  const mergeData = [...secondDayData, ...moveData];
+  // 对第二天的数据排序
+  const sortMergeData = mergeData.map((item1, index1) => {
+    item1.sort = index1;
+    return item1;
+  });
+  // 批量添加或者更新
+  await batchAddOrUpdateTodos(sortMergeData);
+  ElMessage.success("已成功将今天的未完成事项移动到第二天");
 }
 
 async function handleExport() {
@@ -220,8 +252,8 @@ async function handleImport() {
   }
 }
 
-async function handleExport2() {
-  const data = await getAllTodos();
+async function handleExport2(date) {
+  const data = await getTodosByDate(date);
   const jsonString = JSON.stringify(data);
 
   const { value } = await ElMessageBox.prompt("导出数据", {

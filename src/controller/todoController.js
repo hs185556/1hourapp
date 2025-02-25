@@ -28,6 +28,11 @@ export const getAllTodos = async function () {
   return await todoService.getAllTodos(...arguments);
 };
 
+export const getTodosByDate = async function (date, filterFn) {
+  if (!date) return await getAllTodos()
+  return await todoService.getTodos("date", window.IDBKeyRange.only(date), filterFn);
+};
+
 export const addTodo = async function () {
   return await todoService.addTodo(...arguments);
 };

@@ -38,9 +38,15 @@
       文本导出
     </el-button>
     <br />
+    <el-button type="primary" link @click="emit('export3')">导出当前</el-button>
+    <br />
     <el-button type="primary" link @click="emit('moveToPool')">
       进池
     </el-button>
+    <!-- <br />
+    <el-button type="primary" link @click="emit('moveToPool2')">
+      进第二天
+    </el-button> -->
   </el-popover>
 </template>
 
@@ -56,6 +62,8 @@ const emit = defineEmits([
   "moveToPool",
   "import2",
   "export2",
+  "export3",
+  "moveToPool2",
 ]);
 
 const buttonRef = ref(null);
