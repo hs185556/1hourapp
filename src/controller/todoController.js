@@ -29,8 +29,11 @@ export const getAllTodos = async function () {
 };
 
 export const getTodosByDate = async function (date, filterFn = () => true) {
+  // TMP 不想处理了
   const allData = await getAllTodos();
-  return allData.filter((v) => v.date == date).filter(filterFn);
+  return allData
+    .filter((v) => v.date == date || v.source === 1 || v.source === 2)
+    .filter(filterFn);
   return await todoService.getTodos(
     "date",
     window.IDBKeyRange.only(date),
