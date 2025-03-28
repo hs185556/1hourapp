@@ -170,6 +170,7 @@ async function moveToPoolData() {
   // 排序保存
   sortData();
   await saveData();
+  await getData();
   ElMessage.success("已成功将未完成事项移动到待办事项");
 }
 
